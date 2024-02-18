@@ -10,3 +10,4 @@ class Command(BaseCommand):
 
     def hadle(self, *args, **options):
         pass
+
