@@ -115,11 +115,11 @@ class PrivateUserApiTests(TestCase):
     def setUp(self):
         self.user = create_user(
             email = 'test@example.com',
-            passoword = 'test123',
+            password = 'test123',
             name = 'Test Name'
         )
         self.client = APIClient()
-        self.client.force_authentication(user=self.user)
+        self.client.force_authenticate(user=self.user)
 
     def test_retrieve_user_success(self):
         """Test retriving profile with loged user"""
@@ -145,5 +145,5 @@ class PrivateUserApiTests(TestCase):
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.name, payload['name'])
-        self.assertEqual(self.user.check_password(payload['password']))
+        self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
