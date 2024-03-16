@@ -20,7 +20,6 @@ RUN mkdir -p /vol/static && \
 
 VOLUME /vol/static
 
-USER /vol/static
 
 USER nginx
 
