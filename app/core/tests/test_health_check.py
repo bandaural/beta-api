@@ -10,7 +10,7 @@ from rest_framework.test import APIClient
 
 
 class HealthCheckTests(TestCase):
-    """Test the health checj API. """
+    """Test the health check API. """
 
     def test_health_check(self):
         client = APIClient()
