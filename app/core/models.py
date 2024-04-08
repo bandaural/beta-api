@@ -1,7 +1,7 @@
 """
 Database models.
 """
-
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import ( AbstractBaseUser,
                                         BaseUserManager,
@@ -42,3 +42,23 @@ class User(AbstractBaseUser,PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+
+class Transaction(models.Model):
+    """Transaction object."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    card = models.CharField(max_length=255, blank=True, null=True)
+    income = models.IntegerField(blank=True, null=True)
+    expense = models.IntegerField(blank=True, null=True)
+    currency = models.CharField(max_length=255,blank=True, null=True)
+    date = models.CharField(max_length=255, blank=True, null=True)
+    type = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.card
+
+
