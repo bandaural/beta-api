@@ -55,8 +55,9 @@ class Transaction(models.Model):
     income = models.IntegerField(blank=True, null=True)
     expense = models.IntegerField(blank=True, null=True)
     currency = models.CharField(max_length=255,blank=True, null=True)
-    date = models.CharField(max_length=255, blank=True, null=True)
+    date = models.DateField(max_length=255, blank=True, null=True)
     type = models.CharField(max_length=255, blank=True, null=True)
+    comment = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.card
