@@ -11,10 +11,14 @@ from rest_framework.test import APIClient
 
 from core.models import Transaction
 
-from transaction.serializers import TransactionSerializer
+from transaction.serializers import TransactionSerializer, TransactionDetailSerializer
 
 
 TRANSACTIONS_URL = reverse('transaction:transaction-list')
+
+def detail_url(transaction_id):
+    """Create and return a transaction detail URL."""
+    return reverse('transaction:transaction-detail', args=[transaction_id])
 
 def create_transaction(user, **params):
     """Create and return a sample transaction. """
@@ -80,3 +84,32 @@ class PrivateRecipeApiTests(TestCase):
         serializer = TransactionSerializer(transactions, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_get_transaction_detail(self):
+        """Test get transaction detail"""
+        transaction = create_transaction(user=self.user)
+
+        url = detail_url(transaction.id)
+        res = self.client.get(url)
+
+        serializer = TransactionDetailSerializer(transaction)
+        self.assertEqual(res.data, serializer.data)
+
+    def test_create_transaction(self):
+        """Test creating a transaction"""
+        payload = {
+            'card' : '',
+            'income': 4124,
+            'currency': 'CLP',
+            'type': 'credit',
+            'comment': 'weed',
+            'billing_month': 'june'
+        }
+        res = self.client.post(TRANSACTIONS_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        transaction = Transaction.objects.get(id=res.data['id'])
+        for k,v in payload.items():
+            self.assertEqual(getattr(transaction,k), v)
+        self.assertEqual(transaction.user, self.user)
+

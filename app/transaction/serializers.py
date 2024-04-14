@@ -13,3 +13,11 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ['id', 'card', 'income', 'expense', 'currency', 'date', 'type', 'comment', 'billing_month']
         read_only_fields = ['id']
+
+
+class TransactionDetailSerializer(TransactionSerializer):
+    """Serializer for the detail of transaction"""
+
+    class Meta(TransactionSerializer.Meta):
+        fields = TransactionSerializer.Meta.fields
+
