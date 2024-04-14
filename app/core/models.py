@@ -44,6 +44,27 @@ class User(AbstractBaseUser,PermissionsMixin):
     USERNAME_FIELD = 'email'
 
 
+class Category(models.Model):
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class Supplier(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=255, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default="", blank=True,null=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Transaction(models.Model):
     """Transaction object."""
@@ -59,6 +80,8 @@ class Transaction(models.Model):
     type = models.CharField(max_length=255, blank=True, null=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
     billing_month = models.CharField(max_length=255, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.card

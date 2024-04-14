@@ -53,3 +53,5 @@ class TransactionAdmin(admin.ModelAdmin):
 
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Transaction, TransactionAdmin)
+admin.site.register(models.Supplier)
+admin.site.register(models.Category)
