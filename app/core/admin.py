@@ -48,5 +48,8 @@ class UserAdmin(BaseUserAdmin):
             ),
         )
 
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'date', 'income', 'expense', 'card', 'currency')
+
 admin.site.register(models.User, UserAdmin)
-admin.site.register(models.Transaction)
+admin.site.register(models.Transaction, TransactionAdmin)
