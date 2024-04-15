@@ -51,7 +51,13 @@ class UserAdmin(BaseUserAdmin):
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'date', 'income', 'expense', 'card', 'currency')
 
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'category', 'user')
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'user')
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Transaction, TransactionAdmin)
-admin.site.register(models.Supplier)
-admin.site.register(models.Category)
+admin.site.register(models.Supplier, SupplierAdmin)
+admin.site.register(models.Category, CategoryAdmin)
