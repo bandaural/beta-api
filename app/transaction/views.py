@@ -2,33 +2,82 @@
 Views for the recipe APIs.
 """
 
-from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from core.models import Transaction
-from transaction import serializers
+from core.models import Transaction, Supplier, Category
+from .serializers import TransactionSerializer
+
+from django.http import JsonResponse
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+
+
+@api_view(['POST', 'GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def transaction(request):
+    if request.method == 'GET':
+        transactions = Transaction.objects.filter(user=request.user)
+        serializer = TransactionSerializer(transactions, many = True)
+        return JsonResponse(serializer.data, safe=False)
+
+    if request.method == 'POST':
+        print(request.data)
+        category = request.data.get('category')
+        print(category)
+        print(request.user)
+        #Si la transacción no llega con el campo categoría
+        if category == None:
+            print('POST sin categoria')
+            data = request.data
+
+            #Revisar si el supplier de la transacción existir la categoría del supplier
+            name_supplier = data['supplier']
+            supplier_exists = Supplier.objects.filter(user=request.user, name=name_supplier['name']).exists()
+            print(supplier_exists)
+            if supplier_exists == True:
+                queryset = Supplier.objects.filter(user=request.user, name=name_supplier['name']).values('id', 'name', 'category')
+                print(queryset)
+                queryset_data = list(queryset)
+
+                category = Category.objects.filter(id=queryset_data[0]['category']).values('name')
+                category_name = list(category)[0]['name']
+                supplier_category = {
+                    "name": category_name
+                }
+                data['category'] = supplier_category
+                print(data)
+                transaction_serializer = TransactionSerializer(data=data, context={'request': request})
+                print(transaction_serializer)
+
+                if transaction_serializer.is_valid():
+                    transaction_serializer.save(user=request.user)
+                    return Response(transaction_serializer.data, status = status.HTTP_201_CREATED)
+
+            #Si no existe el supplier se usa la categoría "pendiente"
+            else:
+                category = {
+                    "name": "Pending"
+                }
+                data['category'] = category
+                print(data)
+                transaction_serializer = TransactionSerializer(data=data, context={'request': request})
+                if transaction_serializer.is_valid():
+                    transaction_serializer.save(user=request.user)
+                    return Response(transaction_serializer.data, status = status.HTTP_201_CREATED)
+
+        else:
+            print('aqui estamos')
+            data = request.data
+            #data['user'] = request.user.id
+            print(data)
+            transaction_serializer = TransactionSerializer(data=data, context={'request': request})
+
+            if transaction_serializer.is_valid():
+                transaction_serializer.save(user=request.user)
+                return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
 
 
 
-class TransactionViewSet(viewsets.ModelViewSet):
-    """View for manage recipe APIs."""
-    serializer_class = serializers.TransactionDetailSerializer
-    queryset = Transaction.objects.all()
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        """Retrieve transaction for authenticated user. """
-        return self.queryset.filter(user=self.request.user).order_by('-id')
-
-    def get_serializer_class(self):
-        """Return the serializer class for request."""
-        if self.action == 'list':
-            return serializers.TransactionSerializer
-
-        return self.serializer_class
-
-    def perform_create(self, serializer):
-        """Create a new transaction."""
-        serializer.save(user=self.request.user)
