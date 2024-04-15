@@ -1,6 +1,6 @@
 """
 Tests for transaction APIs.
-"""
+
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -11,17 +11,17 @@ from rest_framework.test import APIClient
 
 from core.models import Transaction
 
-from transaction.serializers import TransactionSerializer, TransactionDetailSerializer
+from transaction.serializers import TransactionSerializer
 
 
 TRANSACTIONS_URL = reverse('transaction:transaction-list')
 
 def detail_url(transaction_id):
-    """Create and return a transaction detail URL."""
+    """"""Create and return a transaction detail URL.""""""
     return reverse('transaction:transaction-detail', args=[transaction_id])
 
 def create_transaction(user, **params):
-    """Create and return a sample transaction. """
+    """"""Create and return a sample transaction. """"""
     defaults = {
         'card' : '',
         'income': 4124,
@@ -36,18 +36,18 @@ def create_transaction(user, **params):
 
 
 class PublicTransactionAPITest(TestCase):
-    """Test unauthenticated API request."""
+    """"""Test unauthenticated API request.""""""
     def setUp(self):
         self.client = APIClient()
 
     def test_auth_required(self):
-        """Test auth is required to call API"""
+        """"""Test auth is required to call API""""""
         res = self.client.get(TRANSACTIONS_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class PrivateRecipeApiTests(TestCase):
-    """Test authenticated API requests."""
+
 
     def setUp(self):
         self.client = APIClient()
@@ -58,7 +58,7 @@ class PrivateRecipeApiTests(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_retrieve_transactions(self):
-        """Test retrieving a list of transactions."""
+
         create_transaction(user=self.user)
         create_transaction(user=self.user)
 
@@ -70,7 +70,7 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_transactions_list_limited_to_user(self):
-        """Test list of transactions is limited to authenticated user."""
+
         other_user = get_user_model().objects.create_user(
             'other@example.com',
             'password123',
@@ -86,17 +86,17 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_get_transaction_detail(self):
-        """Test get transaction detail"""
+
         transaction = create_transaction(user=self.user)
 
         url = detail_url(transaction.id)
         res = self.client.get(url)
 
-        serializer = TransactionDetailSerializer(transaction)
+        serializer = TransactionSerializer(transaction)
         self.assertEqual(res.data, serializer.data)
 
     def test_create_transaction(self):
-        """Test creating a transaction"""
+
         payload = {
             'card' : '',
             'income': 4124,
@@ -113,3 +113,5 @@ class PrivateRecipeApiTests(TestCase):
             self.assertEqual(getattr(transaction,k), v)
         self.assertEqual(transaction.user, self.user)
 
+
+"""
