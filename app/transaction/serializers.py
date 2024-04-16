@@ -68,5 +68,8 @@ class TransactionSerializer(serializers.ModelSerializer):
         print(transaction)
         return transaction
 
+    def update(self, validated_data):
+        pass
+
 
 

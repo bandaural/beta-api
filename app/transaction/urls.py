@@ -12,5 +12,6 @@ from transaction import views
 app_name = 'transaction'
 
 urlpatterns = [
-    path('', views.transaction)
+    path('', views.transaction),
+    path('<int:id>', views.transaction_detail)
 ]
