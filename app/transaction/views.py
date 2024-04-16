@@ -106,6 +106,14 @@ def transaction_detail(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def supplier(request):
+    if request.method == 'GET':
+        suppliers = Supplier.objects.filter(user=request.user)
+        serializer = TransactionSerializer(suppliers, many = True)
+        return JsonResponse(serializer.data, safe=False)
 
 
 
