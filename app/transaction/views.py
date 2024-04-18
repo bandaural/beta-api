@@ -6,7 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import Transaction, Supplier, Category
-from .serializers import TransactionSerializer
+from .serializers import TransactionSerializer, SupplierSerializer
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -112,7 +112,7 @@ def transaction_detail(request, id):
 def supplier(request):
     if request.method == 'GET':
         suppliers = Supplier.objects.filter(user=request.user)
-        serializer = TransactionSerializer(suppliers, many = True)
+        serializer = SupplierSerializer(suppliers, many = True)
         return JsonResponse(serializer.data, safe=False)
 
 
