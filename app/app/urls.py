@@ -31,7 +31,8 @@ urlpatterns = [
     path('api/health-check/', core_views.health_check, name='health-check'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),
     path('api/user/', include('user.urls')),
-    path('api/transaction/', include('transaction.urls'))
+    path('api/transaction/', include('transaction.urls')),
+    path('api/supplier/', include('supplier.urls'))
 
 ]
 

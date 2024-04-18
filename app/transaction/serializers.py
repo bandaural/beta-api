@@ -42,6 +42,25 @@ class SupplierSerializer(serializers.ModelSerializer):
         print(supplier)
         return supplier
 
+    def update(self, instance, validated_data):
+        category_data = validated_data.pop('category')
+        print(validated_data)
+
+        request = self.context.get('request')
+        auth_user = request.user
+        print(auth_user)
+
+        category, created = Category.objects.get_or_create(
+                                            user = auth_user,
+                                            **category_data
+        )
+        print(category)
+
+
+        name = instance.name
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
 
 class TransactionSerializer(serializers.ModelSerializer):
     """Serializer for transactions. """
