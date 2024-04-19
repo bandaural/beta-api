@@ -70,8 +70,6 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     def update(self, validated_data):
 
-
-
         pass
 
 
