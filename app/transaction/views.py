@@ -24,10 +24,10 @@ def transaction(request):
         return JsonResponse(serializer.data, safe=False)
 
     if request.method == 'POST':
-        print(request.data)
+        #print(request.data)
         category = request.data.get('category')
-        print(category)
-        print(request.user)
+        #print(category)
+        #print(request.user)
         #Si la transacción no llega con el campo categoría
         if category == None:
             print('POST sin categoria')

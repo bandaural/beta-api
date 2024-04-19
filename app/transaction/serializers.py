@@ -48,6 +48,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             supplier, created = Supplier.objects.get_or_create(user=auth_user, category=category, **supplier)
 
             transaction = Transaction.objects.create(category=category, supplier=supplier, **validated_data)
+            print('Este es el serializer')
             print(transaction)
             return transaction
 
