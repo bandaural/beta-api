@@ -23,15 +23,10 @@ class SupplierSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Update a supplier"""
-        auth_user = self.context['request'].user
-        print(auth_user)
 
         category = validated_data.pop('category')
         print(category)
 
-        category, created = Category.objects.get_or_create(
-                                            user = auth_user,
-                                            **category)
 
         instance.name = validated_data.get('name', instance.name)
         instance.save()
