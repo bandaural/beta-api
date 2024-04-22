@@ -37,7 +37,7 @@ def supplier_detail(request, id):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = SupplierSerializer(supplier, data=request.data)
+        serializer = SupplierSerializer(supplier, data=request.data, context={'request': request})
         print(serializer)
         if serializer.is_valid():
             serializer.save()
