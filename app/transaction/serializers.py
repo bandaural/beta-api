@@ -4,11 +4,14 @@ Serializers for recipes APIs.
 
 from rest_framework import serializers
 
-from core.models import Transaction, Category, Supplier
+from core.models import Transaction, Category, Supplier, Body
 from rest_framework.fields import CurrentUserDefault
 
 
-
+class BodySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Body
+        fields = ['id', 'description']
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

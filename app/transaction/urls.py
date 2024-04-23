@@ -13,5 +13,6 @@ app_name = 'transaction'
 
 urlpatterns = [
     path('', views.transaction),
-    path('<int:id>', views.transaction_detail)
+    path('<int:id>', views.transaction_detail),
+    path('body', views.body)
 ]

@@ -43,6 +43,16 @@ class User(AbstractBaseUser,PermissionsMixin):
 
     USERNAME_FIELD = 'email'
 
+class Body(models.Model):
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            on_delete=models.CASCADE
+    )
+    description = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.description
+
 
 class Category(models.Model):
     user = models.ForeignKey(
