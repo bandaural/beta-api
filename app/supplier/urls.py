@@ -1,9 +1,10 @@
 """
-URL mapings for the supplier apps.
+URL mapings for the recipe apps.
 """
 
 from django.urls import (
-    path
+    path,
+    include,
 )
 
 from supplier import views

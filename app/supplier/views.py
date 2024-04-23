@@ -1,10 +1,11 @@
-
-
+"""
+Views for the recipe APIs.
+"""
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from core.models import Supplier, Category
+from core.models import Transaction, Supplier, Category
 from .serializers import SupplierSerializer
 
 from django.http import JsonResponse
@@ -21,11 +22,11 @@ def supplier(request):
         serializer = SupplierSerializer(suppliers, many = True)
         return JsonResponse(serializer.data, safe=False)
 
-
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def supplier_detail(request, id):
+
     try:
         supplier = Supplier.objects.get(pk=id)
     except Supplier.DoesNotExist:
@@ -33,13 +34,13 @@ def supplier_detail(request, id):
 
     if request.method == 'GET':
         serializer = SupplierSerializer(supplier)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = SupplierSerializer(supplier, data=request.data)
+        serializer = SupplierSerializer(supplier, data=request.data, context={'request': request})
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
